@@ -1,7 +1,6 @@
 # Flask runs on http://127.0.0.1:5000, so when creating app put redirect uri as: http://127.0.0.1:5000
 # You need to do an oauth, and it's easy to acesss web from python while using flask.
 
-import spotipy      # Actual api's will be accessible with this
 from spotipy.oauth2 import SpotifyOAuth     # Only for the oauth
 
 # Basic flask requirements to set connectivity with the web
@@ -10,6 +9,8 @@ from flask import Flask, request, url_for, session, redirect
 import os       # Access .env
 from dotenv import load_dotenv      # get dotenv
 import time     # To refresh token
+
+from spotify_analysis import *
 
 load_dotenv()
 
@@ -52,7 +53,10 @@ def main():
         return redirect('/')
 
     # Start implementation here
-    return ("OAUTH SUCESSFUL")
+    d ={}
+    d['artist_names'] = get_top_artist_names(token_info)
+    d['track_names'] = get_top_track_names(token_info)
+    return d
 
 
 def get_token():
@@ -77,7 +81,7 @@ def create_spotify_oauth():
     return SpotifyOAuth(client_id=os.getenv('CLIENT_ID'),
                         client_secret=os.getenv('CLIENT_SECRET'),
                         redirect_uri=url_for('redirect_page', _external=True),
-                        scope='user-library-read playlist-modify-public playlist-modify-private')  # Change this based on implementation
+                        scope='user-library-read user-top-read user-read-recently-played user-library-read')  # Change this based on implementation
 
 
 # Run the app
