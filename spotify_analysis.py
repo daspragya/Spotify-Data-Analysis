@@ -1,5 +1,4 @@
 import spotipy      # Actual api's will be accessible with this
-from spotipy.oauth2 import SpotifyOAuth
 
 def get_top_artist_names(token_info):
     sp = spotipy.Spotify(auth=token_info['access_token'])
